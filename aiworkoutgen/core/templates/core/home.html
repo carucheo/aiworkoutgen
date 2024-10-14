@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Workout Generator</title>
+    <!-- below is the tailwind CDN link -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+</head>
+<body class="bg-black text-white font-sans">
+
+<!--navbar-start-->
+<nav class ="container mx-auto py-4 border-b border-gray-700 flex justify-between items-center mb-4">
+    <div>
+        <h1 class="text-3xl font-bold">AI Workout Generator</h1>
+    </div>
+
+    <div class="flex space-x-6">
+        <a href="#" class="text-white hover:underline">History</a>
+        <a href="#" class="text-white hover:underline">Logout</a>
+       
+    </div>
+</nav>
+<!--navbar-end-->
+
+<br>
+
+<!--main start-->
+
+<div class="" >
+    <div>
+
+        <!--home introduction-->
+        <div class="text-center">
+            <h2 class="bg-white text-black inline-block text-2xl font-semibold mb-2">Welcome to AI Workout Generator</h2>
+            <p class ="max-w-3xl mx-auto p-5 leading-relaxed text-lg">The AI-powered workout generator adapts to your goals, schedule,
+                 and available equipment. Whether you have limited time, minimal
+                  gear, or a full setup, it creates personalized workouts that
+                   fit your lifestyle. Just choose your focus area and time 
+                   commitment, & let the AI design the perfect plan to help
+                    you stay on track and achieve your fitness goals with ease.
+            </p>
+        </div>
+        <!--home end introduction-->
+
+
+    </div>
+
+<!--main input form(S) area start-->
+    <div class="max-w-2xl mx-auto p-6 rounded-lg text-center" style="background-color:rgba(66, 66, 66, 0.5);"> <!--opacity is 0.5-->
+        <h2 class="text-1xl font-semibold font-sans text-center mb-2 inline-block">Create Custom Workout Plan:</h2>
+        
+<!--time form inputs-->
+          <form class="max-w-sm mx-auto space-y-4 mb-4">
+            <label for="time" class="block mb- text-sm font-small text-grey-500 ">Time</label>
+            <select id="time" class="bg-black border w-full p-2 text-sm rounded-lg   p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-grey-300 ">
+                
+              
+                <option>10 minutes</option>
+              <option>30 minutes</option>
+              <option>45 minutes</option>
+              <option>60 minutes</option>
+            </select>
+          </form>
+
+           <!-- target form and label -->
+          <form class="max-w-sm mx-auto space-y-4 mb-4">
+            <label for="target" class="block mb-2 text-sm font-small text-grey-500 text-white">Select Target Area</label>
+
+                        <!-- Predefined target checkboxes,copied -->
+            <div class="flex flex-col space-y-2">
+                <div class="flex items-center">
+                    <input id="core-abs" type="checkbox" value="Core/Abs" class="w-4 h-4">
+                    <label for="core-abs" class="ml-2 text-sm font-medium text-gray-300">Core/Abs</label>
+                </div>
+                <div class="flex items-center">
+                    <input id="legs" type="checkbox" value="Legs" class="w-4 h-4 ">
+                    <label for="legs" class="ml-2 text-sm font-medium text-gray-300">Legs</label>
+                </div>
+                <div class="flex items-center">
+                    <input id="arms" type="checkbox" value="Arms" class="w-4 h-4">
+                    <label for="arms" class="ml-2 text-sm font-medium text-gray-300">Arms</label>
+                </div>
+                <div class="flex items-center">
+                    <input id="full-body" type="checkbox" value="Full Body" class="w-4 h-4">
+                    <label for="full-body" class="ml-2 text-sm font-medium text-gray-300">Full Body</label>
+                </div>
+            </div>
+
+            
+          </form>
+
+
+
+           <!-- equipment form and label -->
+          <form class="max-w-sm mx-auto space-y-4 mb-4">
+            <label for="equipment" class="block mb-2 text-sm font-small text-grey-500">Select Equipment</label>
+            
+            <!-- Predefined equipment checkboxes -->
+            <div class="flex flex-col space-y-2">
+                <div class="flex items-center">
+                    <input id="dumbbells" type="checkbox" value="Dumbbells" class="w-4 h-4">
+                    <label for="dumbbells" class="ml-2 text-sm font-medium text-gray-300">Dumbbells</label>
+                </div>
+                <div class="flex items-center">
+                    <input id="barbell" type="checkbox" value="barbell" class="w-4 h-4">
+                    <label for="barbell" class="ml-2 text-sm font-medium text-gray-300">Barbells</label>
+                </div>
+                <div class="flex items-center">
+                    <input id="resistance-bands" type="checkbox" value="Resistance Bands" class="w-4 h-4 ">
+                    <label for="resistance-bands" class="ml-2 text-sm font-medium text-gray-300 ">Resistance Bands</label>
+                </div>
+                <div class="flex items-center">
+                    <input id="bodyweight" type="checkbox" value="Bodyweight" class="w-4 h-4 ">
+                    <label for="bodyweight" class="ml-2 text-sm font-medium  text-gray-300">Bodyweight</label>
+                </div>
+            </div>
+
+            <!--customs-->
+            <!-- Add your own target area or goal -->
+            <!-- Add your own equipment -->
+            <label for="custom-equipment" class="block mt-4 mb-2 text-sm font-small text-white">Add Custom Equipment</label>
+            <input id="custom-equipment" type="text" class="bg-black border  text-sm rounded-lg block w-full p-2.5 bg-gray-700 border-gray-600 " placeholder="Enter custom equipment">
+
+
+            <label for="custom-target" class="block mt-4 mb-2 text-sm font-small text-white">Add Custom Target or Goal</label>
+            <input id="custom-target" type="text" class="bg-black border text-white text-sm rounded-lg  block w-full p-2.5 bg-gray-700 border-gray-600" placeholder="Enter custom target/goal">
+        </form>
+        
+
+
+   
+    
+<!--button -->
+      
+<button id="GenerateWorkoutButton" class="bg-white text-black text-sm font-bold py-2 px-4 rounded-lg border border-gray-300 hover:bg-gray-200 mt-4 mb-4">
+    <span>Submit</span>
+</button>
+        </div>
+        
+
+
+       
+
+<!--main input form(S) area end-->
+
+<br>
+<br>
+
+
+</div>
+
+<!--main end -->
+
+
+<!--may add loading animation in future-->
+
+
+
+<!--temp ai insertion start-->
+
+<section class="mt-10 flex-grow">
+    <h3 class="text-lg mb-4 font-medium text-center">Generated Workout [Temp]</h3>
+    <div id="workoutContent" class="mt-2 text-center text-emerald-500 space-y-4">
+        xx   <!--section for displaying content-->
+    </div>
+</section>
+<!--temp ai insertion end -->
+
+<!--footer-->
+<footer class =" mx-auto p-1 text-sm text-center mb-3 p-4" style="background-color:rgba(0, 0, 0);"">
+    teamcode : 
+    <a href="https://github.com/carucheo">lalo</a>, 
+    <a href="https://github.com/parth2300" >pxrth</a>, 
+    <a href="https://github.com/Spaidafora">spaid</a>.
+    </footer>
+</body>
+</html>
