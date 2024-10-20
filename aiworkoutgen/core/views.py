@@ -6,7 +6,7 @@ from django.http import JsonResponse
 from openai import OpenAI
 
 #API key
-key = 'insert-key'
+key = 'at discord chat 2'
 client = OpenAI(api_key = key)
 
 
@@ -27,17 +27,18 @@ def user_workout(request):
     if request.method == 'POST':  # validate
 
         # Get user inputs
-        time = request.POST.get('time')
+        time = request.POST.get('time') #capture time in string format i.e 10 minutes
+        timeInt = int(time.split()[0]) # take only the first part, convert to int i.e 10
         target = request.POST.getlist('target_area')
         equipment = request.POST.getlist('equipment')
         custom_equipment = request.POST.get('custom_equipment', '')  # Default to '' if not provided
         custom_target = request.POST.get('custom_target', '')
 
-        # ChatGPT-generated prompt
+        # ChatGPT-generated prompt, .joint converts format from list to a string
         chatGPT_generated_prompt = f"""
-        Generate a custom workout plan based on the following user inputs:
+        Generate a custom workout plan with sets and reps keys based on the following user inputs:
 
-        - **Time**: {time} minutes
+        - **Time**: {timeInt} minutes
         - **Target Areas**: {', '.join(target)}
         - **Equipment**: {', '.join(equipment)}
         - **Custom Equipment**: {custom_equipment or 'None'}
@@ -65,16 +66,16 @@ def user_workout(request):
         - Return the workout plan in **JSON** format, with each section as a key.
         """
 
-        response = client.chat.completions.create( #I had chatgpt genarate custom schema for json output , chat completetion template used from openai documentation
+        response = client.chat.completions.create( #generate JSON data, from chat.completetion openai documentation, custom JSON schema generated
             model="gpt-4o-2024-08-06",
             messages=[
                 {
                     "role": "user",
-                    "content": chatGPT_generated_prompt
+                    "content": chatGPT_generated_prompt 
                 },
             ],
             response_format={         
-                "type": "json_schema",
+               "type": "json_schema",
                 "json_schema": {
                     "name": "workout_schema",
                     "schema": {
@@ -108,6 +109,7 @@ def user_workout(request):
                                             "properties": {
                                                 "name": { "type": "string" },
                                                 "sets": { "type": "integer" },
+                                                "reps": { "type": "integer" },  
                                                 "time": { "type": "integer" },
                                                 "target_area": { "type": "string" }
                                             }
@@ -120,6 +122,7 @@ def user_workout(request):
                                             "properties": {
                                                 "name": { "type": "string" },
                                                 "sets": { "type": "integer" },
+                                                "reps": { "type": "integer" },  
                                                 "time": { "type": "integer" },
                                                 "target_area": { "type": "string" }
                                             }
@@ -132,23 +135,31 @@ def user_workout(request):
                                             "properties": {
                                                 "name": { "type": "string" },
                                                 "sets": { "type": "integer" },
+                                                "reps": { "type": "integer" },  
                                                 "time": { "type": "integer" },
                                                 "target_area": { "type": "string" }
                                             }
                                         }
                                     }
-                                },
-                                "required": ["Warm-up", "Cool Down"]
+                                }
                             }
-                        },
-                        "required": ["time", "target", "equipment", "sections"]
+                        }
                     }
                 }
             }
         )
 
-        workout_plan_json = json.loads(response.choices[0].message.content)
-        return JsonResponse(workout_plan_json)
 
+        workout_plan_json = json.loads(response.choices[0].message.content)
+
+        total_time = 0 
+        for section in workout_plan_json["sections"].values(): #takes array of all sections, name, sets, reps, time, target_area
+            for exercise in section:  #itterate through array values in each section
+                total_time += exercise["time"]  #takes each value of time in each section, takes sum
+
+        if total_time != timeInt:
+            return JsonResponse({"error": "ChatGPT unable to provide accurate time, please try again!"}) #django needs httpResponse object to display
+        else:
+            return JsonResponse(workout_plan_json)
 
 
