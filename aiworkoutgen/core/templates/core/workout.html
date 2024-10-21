@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Workout Plan</title>
+</head>
+<body>
+    <!--to understand nested loop structure, reference json schema in views.py-->
+
+    <h1>Your AI Gnerated Workout Plan</h1>
+    <!--display time, target, eq from form input-->
+
+    <p><b>Time: {{workout_data.time}}</b></p>
+    <p><b>Target: {{target_list}}</b></p>
+    <p><b>Equipment: {{equipment_list}}</b></p>
+
+    <h3>Workout Sections:</h3>
+    <!-- go through sections , in each section, go through each item-->
+    {% for section_name, exercise_list in workout_data.sections.items %}
+        <h4>{{ section_name}}</h4> <!--print section name, i.e warmup, cooldown-->
+            <ul> {% for exercise in exercise_list %}  <!--loop through exercises info in each section-->
+                
+                <li> <b> {{exercise.name}}</b> <br> <!--print everything under that exercise set i.e name, time, sets, reps, etc-->
+        
+                    Time: {{exercise.time}} minutes <br>
+                    Sets: {{exercise.sets}} <br> 
+                    Reps: {{exercise.reps}} <br> 
+                    Target Area: {{exercise.target_area}} <br>
+                    Equipment Needed: {{exercise.equipment_needed}}<br>
+
+                    <br>
+                </li>
+                {% endfor %}
+            </ul>
+            {% endfor %}
+</body>
+</html>
