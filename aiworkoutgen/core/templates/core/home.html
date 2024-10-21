@@ -1,182 +1,213 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
-<head>
 
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Workout Generator</title>
-    <!-- below is the tailwind CDN link -->
-    <script src="https://cdn.tailwindcss.com"></script>
-
+    <link href="{% static 'css/output.css' %}" rel="stylesheet">
 </head>
-<body class="bg-black text-white font-sans">
 
-<!--navbar-start-->
-<nav class ="container mx-auto py-4 border-b border-gray-700 flex justify-between items-center mb-4">
-    <div>
-        <h1 class="text-3xl font-bold">AI Workout Generator</h1>
-    </div>
+<body class="bg-gray-100 text-gray-800 font-sans">
 
-    <div class="flex space-x-6">
-        <a href="#" class="text-white hover:underline">History</a>
-        <a href="#" class="text-white hover:underline">Logout</a>
+    <!-- Navbar Start -->
+    <nav class="bg-white py-4 shadow-md fixed top-0 w-full z-10">
+        <div class="container mx-auto flex justify-between items-center px-6">
+            <h1 class="text-2xl font-bold text-gray-900">AI Workout Generator</h1>
+            <div class="flex space-x-4 items-center">
+                <a href="#" class="text-gray-600 hover:text-red-500 transition duration-300">History</a>
+                <a href="#" class="text-gray-600 hover:text-red-500 transition duration-300">Logout</a>
+                <button id="theme-toggle" class="text-gray-600 hover:text-red-500 transition duration-300">
+                    Toggle Theme
+                </button>
+            </div>
+        </div>
+    </nav>
+    <!-- Navbar End -->
 
-    </div>
-</nav>
-<!--navbar-end-->
-
-<br>
-
-<!--main start-->
-
-<div class="" >
-    <div>
-
-        <!--home introduction-->
-        <div class="text-center">
-            <h2 class="bg-white text-black inline-block text-2xl font-semibold mb-2">Welcome to AI Workout Generator</h2>
-            <p class ="max-w-3xl mx-auto p-5 leading-relaxed text-lg">The AI-powered workout generator adapts to your goals, schedule,
-                 and available equipment. Whether you have limited time, minimal
-                  gear, or a full setup, it creates personalized workouts that
-                   fit your lifestyle. Just choose your focus area and time 
-                   commitment, & let the AI design the perfect plan to help
-                    you stay on track and achieve your fitness goals with ease.
+    <!-- Hero Section Start -->
+    <header class="bg-cover bg-center h-screen flex items-center justify-center">
+        <div class="text-center bg-opacity-75 bg-gray-800 p-6 rounded-lg shadow-lg">
+            <h2 class="text-4xl font-bold text-white mb-4">Elevate Your Fitness Journey</h2>
+            <p class="text-lg text-gray-300 max-w-md mx-auto mb-6">
+                Build personalized workout plans with our AI-powered generator. Tailored to your goals, schedule, and
+                equipment.
             </p>
+            <button id="get-started"
+                class="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-6 rounded-md transition duration-300">Get
+                Started</button>
         </div>
-        <!--home end introduction-->
+    </header>
+    <!-- Hero Section End -->
 
+    <!-- Modal Start -->
+    <div id="workout-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+        <div id="modal-content" class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
+            <h3 class="text-2xl font-bold mb-4">Create Your Custom Workout Plan</h3>
+            <form method="POST" action="{% url 'workout' %}" class="space-y-4">
+                {% csrf_token %}
 
-    </div>
-
-<!--main input area start-->
-    <div class="max-w-2xl mx-auto p-6 rounded-lg text-center" style="background-color:rgba(66, 66, 66, 0.5);"> <!--opacity is 0.5-->
-        <h2 class="text-1xl font-semibold font-sans text-center mb-2 inline-block">Create Custom Workout Plan:</h2>
-
-<!--form here, POST to capture, ACTION sent to workout.html-->
-<form method = "POST" action="{% url 'workout' %}" class="max-w-sm mx-auto space-y-4 mb-4"> 
-    {% csrf_token %} <!--if i dont add this token, django security feature wont allow to run?-->
-
-    <label for="time" class="block mb- text-sm font-small text-grey-500 ">Time</label>
-    <select id="time" name = "time" class="bg-black border w-full p-2 text-sm rounded-lg   p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-grey-300 ">
-
-
-                <option>10 minutes</option>
-              <option>30 minutes</option>
-              <option>45 minutes</option>
-              <option>60 minutes</option>
-            </select>
-
-
-           <!-- target and label -->
-
-            <label for="target" class="block mb-2 text-sm font-small text-grey-500 text-white">Select Target Area</label>
-
-                        <!-- Predefined target checkboxes,copied -->
-            <div class="flex flex-col space-y-2">
-                <div class="flex items-center">
-                    <input id="core-abs" name = "target_area" type="checkbox" value="Core/Abs" class="w-4 h-4">
-                    <label for="core-abs" class="ml-2 text-sm font-medium text-gray-300">Core/Abs</label>
+                <!-- Time Selection -->
+                <div>
+                    <label for="time" class="block mb-2 text-sm font-medium">Workout Duration</label>
+                    <select id="time" name="time"
+                        class="bg-gray-100 border border-gray-300 w-full p-3 rounded-md focus:ring-2 focus:ring-orange-500 text-black">
+                        <option>15 minutes</option>
+                        <option>30 minutes</option>
+                        <option>45 minutes</option>
+                        <option>60 minutes</option>
+                        <option>75 minutes</option>
+                        <option>90 minutes</option>
+                    </select>
                 </div>
-                <div class="flex items-center">
-                    <input id="legs" name = "target_area" type="checkbox" value="Legs" class="w-4 h-4 ">
-                    <label for="legs" class="ml-2 text-sm font-medium text-gray-300">Legs</label>
+
+                <!-- Target Area Checkboxes -->
+                <div>
+                    <label class="block mb-2 text-sm font-medium">Select Target Area</label>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="flex items-center">
+                            <input id="core-abs" name="target_area" type="checkbox" value="Core/Abs"
+                                class="w-4 h-4 text-red-500 bg-gray-100 border-gray-300 rounded">
+                            <label for="core-abs" class="ml-2 text-sm">Core/Abs</label>
+                        </div>
+                        <div class="flex items-center">
+                            <input id="legs" name="target_area" type="checkbox" value="Legs"
+                                class="w-4 h-4 text-red-500 bg-gray-100 border-gray-300 rounded">
+                            <label for="legs" class="ml-2 text-sm">Legs</label>
+                        </div>
+                        <div class="flex items-center">
+                            <input id="arms" name="target_area" type="checkbox" value="Arms"
+                                class="w-4 h-4 text-red-500 bg-gray-100 border-gray-300 rounded">
+                            <label for="arms" class="ml-2 text-sm">Arms</label>
+                        </div>
+                        <div class="flex items-center">
+                            <input id="full-body" name="target_area" type="checkbox" value="Full Body"
+                                class="w-4 h-4 text-red-500 bg-gray-100 border-gray-300 rounded">
+                            <label for="full-body" class="ml-2 text-sm">Full Body</label>
+                        </div>
+                        <div class="flex items-center">
+                            <input id="chest" name="target_area" type="checkbox" value="Chest"
+                                class="w-4 h-4 text-red-500 bg-gray-100 border-gray-300 rounded">
+                            <label for="chest" class="ml-2 text-sm">Chest</label>
+                        </div>
+                        <div class="flex items-center">
+                            <input id="back" name="target_area" type="checkbox" value="Back"
+                                class="w-4 h-4 text-red-500 bg-gray-100 border-gray-300 rounded">
+                            <label for="back" class="ml-2 text-sm">Back</label>
+                        </div>
+                    </div>
                 </div>
-                <div class="flex items-center">
-                    <input id="arms" name = "target_area" type="checkbox" value="Arms" class="w-4 h-4">
-                    <label for="arms" class="ml-2 text-sm font-medium text-gray-300">Arms</label>
+
+                <!-- Equipment Checkboxes -->
+                <div>
+                    <label class="block mb-2 text-sm font-medium">Select Equipment</label>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="flex items-center">
+                            <input id="dumbbells" name="equipment" type="checkbox" value="Dumbbells"
+                                class="w-4 h-4 text-red-500 bg-gray-100 border-gray-300 rounded">
+                            <label for="dumbbells" class="ml-2 text-sm">Dumbbells</label>
+                        </div>
+                        <div class="flex items-center">
+                            <input id="barbell" name="equipment" type="checkbox" value="Barbell"
+                                class="w-4 h-4 text-red-500 bg-gray-100 border-gray-300 rounded">
+                            <label for="barbell" class="ml-2 text-sm">Barbell</label>
+                        </div>
+                        <div class="flex items-center">
+                            <input id="bench" name="equipment" type="checkbox" value="Bench"
+                                class="w-4 h-4 text-red-500 bg-gray-100 border-gray-300 rounded">
+                            <label for="bench" class="ml-2 text-sm">Bench</label>
+                        </div>
+                        <div class="flex items-center">
+                            <input id="squat-rack" name="equipment" type="checkbox" value="Squat Rack"
+                                class="w-4 h-4 text-red-500 bg-gray-100 border-gray-300 rounded">
+                            <label for="squat-rack" class="ml-2 text-sm">Squat Rack</label>
+                        </div>
+                        <div class="flex items-center">
+                            <input id="cables" name="equipment" type="checkbox" value="Cables"
+                                class="w-4 h-4 text-red-500 bg-gray-100 border-gray-300 rounded">
+                            <label for="cables" class="ml-2 text-sm">Cables</label>
+                        </div>
+                        <div class="flex items-center">
+                            <input id="bodyweight" name="equipment" type="checkbox" value="Bodyweight"
+                                class="w-4 h-4 text-red-500 bg-gray-100 border-gray-300 rounded">
+                            <label for="bodyweight" class="ml-2 text-sm">Bodyweight</label>
+                        </div>
+                    </div>
                 </div>
-                <div class="flex items-center">
-                    <input id="full-body" name = "target_area" type="checkbox" value="Full Body" class="w-4 h-4">
-                    <label for="full-body" class="ml-2 text-sm font-medium text-gray-300">Full Body</label>
-                </div>
-            </div>
 
-
-
-
-
-
-           <!-- equipment and label -->
-
-            <label for="equipment" class="block mb-2 text-sm font-small text-grey-500">Select Equipment</label>
-
-            <!-- Predefined equipment checkboxes -->
-            <div class="flex flex-col space-y-2">
-                <div class="flex items-center">
-                    <input id="dumbbells"  name="equipment" type="checkbox" value="Dumbbells" class="w-4 h-4">
-                    <label for="dumbbells" class="ml-2 text-sm font-medium text-gray-300">Dumbbells</label>
-                </div>
-                <div class="flex items-center">
-                    <input id="barbell"  name="equipment" type="checkbox" value="barbell" class="w-4 h-4">
-                    <label for="barbell" class="ml-2 text-sm font-medium text-gray-300">Barbells</label>
-                </div>
-                <div class="flex items-center">
-                    <input id="resistance-bands"  name="equipment" type="checkbox" value="Resistance Bands" class="w-4 h-4 ">
-                    <label for="resistance-bands" class="ml-2 text-sm font-medium text-gray-300 ">Resistance Bands</label>
-                </div>
-                <div class="flex items-center">
-                    <input id="bodyweight"  name="equipment" type="checkbox" value="Bodyweight" class="w-4 h-4 ">
-                    <label for="bodyweight" class="ml-2 text-sm font-medium  text-gray-300">Bodyweight</label>
-                </div>
-            </div>
-
-            <!--customs-->
-            <!-- Add your own target area or goal -->
-            <!-- Add your own equipment -->
-            <label for="custom_equipment"  class="block mt-4 mb-2 text-sm font-small text-white">Add Custom Equipment</label>
-            <input id="custom_equipment" name ="custom_equipment" type="text" class="bg-black border  text-sm rounded-lg block w-full p-2.5 bg-gray-700 border-gray-600 " placeholder="Enter custom equipment">
-
-
-            <label for="custom_target" class="block mt-4 mb-2 text-sm font-small text-white">Add Custom Target or Goal</label>
-            <input id="custom_target" name="custom_target"  type="text" class="bg-black border text-white text-sm rounded-lg  block w-full p-2.5 bg-gray-700 border-gray-600" placeholder="Enter custom target/goal">
-
-
-
-
-
-
-<!--button -->
-
-<button type ="submit" id="GenerateWorkoutButton" class="bg-white text-black text-sm font-bold py-2 px-4 rounded-lg border border-gray-300 hover:bg-gray-200 mt-4 mb-4">
-    <span>Submit</span>
-</button>
+                <!-- Get Started Button -->
+                <button type="submit"
+                    class="w-full bg-red-500 hover:bg-red-600 text-white font-semibold py-3 rounded-md transition duration-300">Generate
+                    Plan</button>
+                <button type="button" id="close-modal"
+                    class="w-full mt-2 bg-gray-500 hover:bg-gray-600 text-white font-semibold py-2 rounded-md transition duration-300">Cancel</button>
+            </form>
         </div>
-
-</form>
-
-
-
-<!--main input form(S) area end-->
-
-<br>
-<br>
-
-
-</div>
-
-<!--main end -->
-
-
-<!--may add loading animation in future-->
-
-
-
-<!--temp ai insertion start-->
-
-<section class="mt-10 flex-grow">
-    <h3 class="text-lg mb-4 font-medium text-center">Generated Workout [Temp]</h3>
-    <div id="workoutContent" class="mt-2 text-center text-emerald-500 space-y-4">
-        xx   <!--section for displaying content-->
     </div>
-</section>
-<!--temp ai insertion end -->
+    <!-- Modal End -->
 
-<!--footer-->
-<footer class =" mx-auto p-1 text-sm text-center mb-3 p-4" style="background-color:rgba(0, 0, 0);"">
-    teamcode : 
-    <a href="https://github.com/carucheo">lalo</a>, 
-    <a href="https://github.com/parth2300" >pxrth</a>, 
-    <a href="https://github.com/Spaidafora">spaid</a>.
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-gray-400 py-6 mt-10">
+        <div class="container mx-auto flex justify-between items-center px-6">
+            <p> Application Development: AI Workout Generator</p>
+            <div class="flex space-x-4">
+                <a href="https://github.com/carucheo"
+                    class="text-gray-400 hover:text-red-600 transition duration-300">lalo</a>
+                <a href="https://github.com/parth2300"
+                    class="text-gray-400 hover:text-red-600 transition duration-300">pxrth</a>
+                <a href="https://github.com/Spaidafora"
+                    class="text-gray-400 hover:text-red-600 transition duration-300">spaid</a>
+            </div>
+        </div>
     </footer>
+    <!-- Footer End -->
+
+    <!-- JavaScript for Modal Interaction -->
+    <script>
+        // Get references to modal elements
+        const getStartedButton = document.getElementById('get-started');
+        const workoutModal = document.getElementById('workout-modal');
+        const closeModalButton = document.getElementById('close-modal');
+        const themeToggle = document.getElementById('theme-toggle');
+        const modalContent = document.getElementById('modal-content');
+
+        function updateModalTheme() {
+            if (document.body.classList.contains('bg-gray-900')) {
+                modalContent.classList.add('bg-gray-800', 'text-gray-100');
+                modalContent.classList.remove('bg-white', 'text-gray-800');
+            } else {
+                modalContent.classList.add('bg-white', 'text-gray-800');
+                modalContent.classList.remove('bg-gray-800', 'text-gray-100');
+            }
+        }
+
+        // Open the modal when the "Get Started" button is clicked
+        getStartedButton.addEventListener('click', () => {
+            workoutModal.classList.remove('hidden');
+        });
+
+        // Close the modal when the "Cancel" button is clicked
+        closeModalButton.addEventListener('click', () => {
+            workoutModal.classList.add('hidden');
+        });
+
+        // Close the modal when clicking outside of it
+        window.addEventListener('click', (event) => {
+            if (event.target === workoutModal) {
+                workoutModal.classList.add('hidden');
+            }
+        });
+
+        // Dark/Light Mode Toggle Script
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('bg-gray-900');
+            document.body.classList.toggle('text-gray-100');
+            document.body.classList.toggle('bg-gray-100');
+            document.body.classList.toggle('text-gray-800');
+            updateModalTheme();
+        });
+    </script>
 </body>
+
 </html>
