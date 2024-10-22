@@ -6,7 +6,7 @@ from django.http import JsonResponse
 from openai import OpenAI
 
 #API key
-key = ''
+key = 'at discord chat 2'
 client = OpenAI(api_key = key)
 
 
@@ -30,9 +30,7 @@ def user_workout(request):
         time = request.POST.get('time') #capture time in string format i.e 10 minutes
         timeInt = int(time.split()[0]) # take only the first part, convert to int i.e 10
         target = request.POST.getlist('target_area')
-        target_list = ", ".join(target)
         equipment = request.POST.getlist('equipment')
-        equipment_list = ", ".join(equipment) #comma sep, remove list format []
         custom_equipment = request.POST.get('custom_equipment', '')  # Default to '' if not provided
         custom_target = request.POST.get('custom_target', '')
 
@@ -41,8 +39,8 @@ def user_workout(request):
         Generate a custom workout plan with sets and reps keys based on the following user inputs:
 
         - **Time**: {timeInt} minutes
-        - **Target Areas**: {target_list}
-        - **Equipment**: {equipment_list}
+        - **Target Areas**: {', '.join(target)}
+        - **Equipment**: {', '.join(equipment)}
         - **Custom Equipment**: {custom_equipment or 'None'}
         - **Custom Target Areas**: {custom_target or 'None'}
 
@@ -60,10 +58,9 @@ def user_workout(request):
         - **Sets** (number of sets)
         - **Time** (time in minutes) 
         - **Target Area** (the body area being targeted)
-        - **Equipment Needed** (the equipment used for the exercise)
 
         3. **Customization**:
-        - Incorporate custom equipment and target areas if provided by the user. If no input from {equipment_list} or {custom_equipment} use body weight by default.
+        - Incorporate custom equipment and target areas if provided by the user. If no input from {equipment} or {custom_equipment} use body weight by default.
 
         4. **Output Format**:
         - Return the workout plan in **JSON** format, with each section as a key.
@@ -111,11 +108,10 @@ def user_workout(request):
                                             "type": "object",
                                             "properties": {
                                                 "name": { "type": "string" },
-                                                "time": { "type": "integer" },
                                                 "sets": { "type": "integer" },
                                                 "reps": { "type": "integer" },  
-                                                "target_area": { "type": "string" },
-                                                "equipment_needed": { "type": "string" }
+                                                "time": { "type": "integer" },
+                                                "target_area": { "type": "string" }
                                             }
                                         }
                                     },
@@ -125,11 +121,10 @@ def user_workout(request):
                                             "type": "object",
                                             "properties": {
                                                 "name": { "type": "string" },
-                                                "time": { "type": "integer" },
                                                 "sets": { "type": "integer" },
                                                 "reps": { "type": "integer" },  
-                                                "target_area": { "type": "string" },
-                                                "equipment_needed": { "type": "string" }
+                                                "time": { "type": "integer" },
+                                                "target_area": { "type": "string" }
                                             }
                                         }
                                     },
@@ -139,11 +134,10 @@ def user_workout(request):
                                             "type": "object",
                                             "properties": {
                                                 "name": { "type": "string" },
-                                                "time": { "type": "integer" },
                                                 "sets": { "type": "integer" },
                                                 "reps": { "type": "integer" },  
-                                                "target_area": { "type": "string" },
-                                                "equipment_needed": { "type": "string" }
+                                                "time": { "type": "integer" },
+                                                "target_area": { "type": "string" }
                                             }
                                         }
                                     }
@@ -156,23 +150,16 @@ def user_workout(request):
         )
 
 
-        workout_plan_json = json.loads(response.choices[0].message.content) # one-liner json parsing, convert json string into py dictionary
-#will display error if time doesn't match user input, temporily blocking this from executing so program can run.  time still needs addressing.
-    ''' total_time = 0  
+        workout_plan_json = json.loads(response.choices[0].message.content)
+
+        total_time = 0 
         for section in workout_plan_json["sections"].values(): #takes array of all sections, name, sets, reps, time, target_area
             for exercise in section:  #itterate through array values in each section
                 total_time += exercise["time"]  #takes each value of time in each section, takes sum
 
         if total_time != timeInt:
             return JsonResponse({"error": "ChatGPT unable to provide accurate time, please try again!"}) #django needs httpResponse object to display
-        else: ''' 
-    
-    #dictionary key pair values for passing json data, var, from django view to template, workout.html!
-    return render(request, 'core/workout.html', {'workout_data': workout_plan_json, #json, needs extra handling, therefore diff key/pair values.
-                                                'target_list' : target_list, #var - target list w/o []
-                                                'equipment_list' : equipment_list #var - equipment list w/o []
-                                                })
-
-                                                                                        
+        else:
+            return JsonResponse(workout_plan_json)
 
 
