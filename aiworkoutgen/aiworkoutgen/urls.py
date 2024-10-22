@@ -20,4 +20,6 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),   # URL for Django's admin panel
     path('', include('core.urls')),    # Includes URLs from the 'core' app
+    path('core/', include('django.contrib.auth.urls')),
+    path('core/', include('core.urls')),
 ]

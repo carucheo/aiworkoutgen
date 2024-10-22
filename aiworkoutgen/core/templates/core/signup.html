@@ -15,9 +15,9 @@
     </div>
 
     <div class="flex space-x-6">
+        <a href="{% url 'home' %}" class="text-white hover:underline">Home</a>
         <a href="{% url 'login' %}" class="text-white hover:underline">Login</a>
-        <a href="{% url 'signup' %}" class="text-white hover:underline">Signup</a>
-       
+
     </div>
 </nav>
 
@@ -28,7 +28,16 @@
 <div class="flex items-center justify-center h-screen">
     <div class="p-8  rounded-lg shadow-md max-w-md w-full" style="background-color:rgba(66, 66, 66, 0.5);">
         <!-- login form here-->
-        <form class="space-y-4">
+        <form method="POST" action="{% url 'signup' %}" class="space-y-4">
+            {% csrf_token %}
+            {% if messages %}
+            <ul>
+                {% for message in messages %}
+                <li class="text-red-500">{{ message }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}    
+        <!-- <form class="space-y-4"> -->
 
             <h2 class ="text-xl font-semibold text-center"> Signup</h2>
             <div>
