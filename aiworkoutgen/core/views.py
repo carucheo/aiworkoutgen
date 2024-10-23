@@ -8,8 +8,8 @@ from .forms import WorkoutPlanForm
 from .models import WorkoutPlan
 
 # API key
-key = 'insert key'
-client = OpenAI(api_key=key)
+key = ''
+client = OpenAI(api_key = key)
 
 def create_workout_plan(request):
     if request.method == 'POST':
